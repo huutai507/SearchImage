@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 
 import classnames from "classnames";
-import LazyLoad from "react-lazyload";
 
 const gf = new GiphyFetch("e3XijBRN98RxgdFW36l7h4ODJsU57geL");
 
@@ -11,6 +10,8 @@ function App() {
   const [favourited, setFavourited] = useState([]);
   const [input, setInput] = useState("");
   const [stateImages, setStateImages] = useState([]);
+
+  let [number, setNumber] = useState(8);
 
   const handleChange = (e) => {
     setInput(e.target.value);
@@ -37,6 +38,10 @@ function App() {
     setStateImages(favourited);
   };
 
+  const handleNextListImage = () => {
+    setNumber((number += 8));
+  };
+
   const handleFavourited = (id, url) => {
     if (!favourited.length) {
       setFavourited([...favourited, { id, url }]);
@@ -59,11 +64,11 @@ function App() {
 
   useEffect(() => {
     const callApiImage = async () => {
-      const { data } = await gf.search(search, { limit: 8 });
+      const { data } = await gf.search(search, { limit: number });
       setStateImages(data);
     };
     callApiImage();
-  }, [search]);
+  }, [search, number]);
 
   return (
     <div className="App">
@@ -81,64 +86,55 @@ function App() {
             </li>
           </ul>
         </header>
-        <LazyLoad>
-          <section className="content">
-            <input
-              type="text"
-              placeholder="Started searching for images"
-              onKeyPress={handleSearch}
-              onChange={handleChange}
-              value={input}
-            />
-            <div className="content__list">
-              {stateImages.length ? (
-                stateImages.map((item, index) => (
-                  <div className="content__list-img">
-                    {item.images === undefined ? (
-                      <>
-                        <img src={item.url} alt="" />
-                        <i
-                          className={classnames(
-                            "fas",
-                            "fa-heart",
-                            "heart-img",
-                            {
-                              "heart-active": favourited.filter(
-                                (value) => value.id === item.id
-                              ).length
-                            }
-                          )}
-                          onClick={() => handleFavourited(item.id, item.url)}
-                        ></i>
-                      </>
-                    ) : (
-                      <>
-                        <img src={item.images.downsized.url} alt="" />
-                        <i
-                          className={classnames(
-                            "fas",
-                            "fa-heart",
-                            "heart-img",
-                            {
-                              "heart-active": favourited.filter(
-                                (value) => value.id === item.id
-                              ).length
-                            }
-                          )}
-                          onClick={() =>
-                            handleFavourited(item.id, item.images.downsized.url)
-                          }
-                        ></i>
-                      </>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div>Not found !</div>
-              )}
-            </div>
-          </section>
-        </LazyLoad>
+        <section className="content">
+          <input
+            type="text"
+            placeholder="Started searching for images"
+            onKeyPress={handleSearch}
+            onChange={handleChange}
+            value={input}
+          />
+          <div className="content__list">
+            {stateImages.length ? (
+              stateImages.slice(-8).map((item, index) => (
+                <div className="content__list-img">
+                  {item.images === undefined ? (
+                    <>
+                      <img src={item.url} alt="" />
+                      <i
+                        className={classnames("fas", "fa-heart", "heart-img", {
+                          "heart-active": favourited.filter(
+                            (value) => value.id === item.id
+                          ).length
+                        })}
+                        onClick={() => handleFavourited(item.id, item.url)}
+                      ></i>
+                    </>
+                  ) : (
+                    <>
+                      <img src={item.images.downsized.url} alt="" />
+                      <i
+                        className={classnames("fas", "fa-heart", "heart-img", {
+                          "heart-active": favourited.filter(
+                            (value) => value.id === item.id
+                          ).length
+                        })}
+                        onClick={() =>
+                          handleFavourited(item.id, item.images.downsized.url)
+                        }
+                      ></i>
+                    </>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div>Not found !</div>
+            )}
+          </div>
+        </section>
+        <div className="btn-fetch">
+          <button onClick={() => handleNextListImage()}>Fetch More</button>
+        </div>
         <footer>
           <ul className="menu-footer">
             <li>Gallereasy POC web app</li>

@@ -87,6 +87,16 @@ img {
   opacity: 1;
 }
 
+.btn-fetch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.btn-fetch button {
+  width: 6rem;
+  height: 2rem;
+}
+
 .heart-img {
   position: absolute;
   bottom: 1rem;
