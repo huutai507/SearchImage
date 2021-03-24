@@ -160,7 +160,7 @@ img {
   }
 
   .content__list-img {
-    width: 100%;
+    width: 100vw;
     height: 100vw;
   }
 
