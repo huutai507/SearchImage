@@ -8,7 +8,7 @@ Open terminal and copy/past this code: Git clone https://github.com/huutai507/Se
 Open project with command: cd SearchImage -> code .(dot)
 
 ### Step 3
-Run command: npm install
+Open extenstion code and run command: npm install
 
 ### Step 4
 Start app with command: npm start
